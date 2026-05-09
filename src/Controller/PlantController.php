@@ -52,7 +52,7 @@ final class PlantController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_plant_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_plant_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(Plant $plant): Response
     {
         return $this->render('plant/show.html.twig', [
