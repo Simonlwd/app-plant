@@ -60,6 +60,20 @@ final class PlantController extends AbstractController
         ]);
     }
 
+    #[Route('/plant/{slug}', name: 'app_plant_show_slug', methods: ['GET'])]
+    public function showBySlug(string $slug, PlantRepository $repo)
+    {
+        $plant = $repo->findOneBy(['slug' => $slug]);
+
+        if (!$plant) {
+            throw $this->createNotFoundException('Plant not found');
+        }
+
+        return $this->render('plant/show.html.twig', [
+            'plant' => $plant,
+        ]);
+    }
+
     #[Route('/{id}/edit', name: 'app_plant_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
