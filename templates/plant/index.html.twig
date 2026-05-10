@@ -7,11 +7,64 @@
 {% block body %}
 	<h1>Plant index</h1>
 
+	<div>
+		<div>
+			{% set columns1 = {
+        'p.dutchName': 'Dutch',
+        'p.latinName': 'Latin',
+        'p.createdAt': 'Newest'
+    } %}
+			{% for field, label in columns1 %}
+				{# toggle direction: als dit veld geselecteerd is, draai om, anders ASC #}
+				{% set toggledDirection = (sort == field and direction == 'ASC') ? 'DESC' : 'ASC' %}
+
+				<a href="{{ path('app_plant_index', app.request.query.all|merge({'sort': field, 'direction': toggledDirection, 'page': 1})) }}">
+					{{ label }}
+					{% if sort == field %}
+						{% if direction == 'ASC' %}⬆️{% else %}⬇️
+						{% endif %}
+					{% endif %}
+				</a>
+			{% endfor %}
+		</div>
+		<form method="get">
+			<input type="text" name="q" value="{{ search }}" placeholder="Search plants...">
+			<button type="submit">Search</button>
+		</form>
+
+		<div class="sort-links">
+			{% set columns = {
+        'p.dutchName': 'Dutch',
+        'p.latinName': 'Latin',
+        'p.createdAt': 'Newest'
+    } %}
+
+			{% for field, label in columns %}
+				{# toggledDirection: als dit veld geselecteerd is, toggle, anders default ASC #}
+				{% set toggledDirection = (sort == field and direction == 'ASC') ? 'DESC' : 'ASC' %}
+
+				<a href="{{ path('app_plant_index', app.request.query.all|merge({ 'sort': field, 'direction': toggledDirection, 'page': 1 })) }}">
+					{{ label }}
+					{% if sort == field %}
+						{% if direction == 'ASC' %}⬆️{% else %}⬇️
+						{% endif %}
+					{% endif %}
+				</a>
+			{% endfor %}
+		</div>
+
+	</div>
 	<table class="table">
 		<thead>
 			<tr>
 				<th>Id</th>
-				<th>DutchName</th>
+				<th>DutchName
+					<a href="{{ path('app_plant_index', app.request.query.all|merge({'sort':'dutch', 'page':1})) }}">
+						Dutch
+						{% if sort == 'dutch' %}⬆️
+						{% endif %}
+					</a>
+				</th>
 				<th>LatinName</th>
 				<th>Slug</th>
 				<th>Description</th>
