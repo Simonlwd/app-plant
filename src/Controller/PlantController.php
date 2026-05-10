@@ -38,19 +38,9 @@ final class PlantController extends AbstractController
                 ->setParameter('search', "%{$search}%");
         }
 
-        // // Veilig sorteren: alleen velden uit whitelist
-        // $validFields = ['p.dutchName', 'p.latinName', 'p.createdAt'];
-        // if (!in_array($sort, $validFields)) {
-        //     $sort = 'p.dutchName';
-        // }
-
         // --- Sorting
         // $direction = ($sort === 'p.createdAt') ? 'DESC' : 'ASC';
         $qb->orderBy($sort, $direction);
-
-
-        // toggle direction voor de volgende click
-        // $nextDirection = ($direction === 'ASC') ? 'DESC' : 'ASC';
 
         // --- Pagination
         $pagination = $paginator->paginate(
@@ -58,8 +48,6 @@ final class PlantController extends AbstractController
             $request->query->getInt('page', 1),
             10,
             [
-                // 'defaultSortFieldName' => $sort,
-                // 'defaultSortDirection' => $direction,
                 'sortFieldWhitelist' => ['p.dutchName', 'p.latinName', 'p.createdAt'],
                 'pageParameterName' => 'page',
                 'distinct' => true,
