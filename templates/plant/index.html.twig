@@ -22,7 +22,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for plant in plants %}
+			{% for plant in pagination %}
 				<tr>
 					<td>{{ plant.id }}</td>
 					<td>{{ plant.dutchName }}</td>
@@ -46,6 +46,6 @@
 			{% endfor %}
 		</tbody>
 	</table>
-
+	{{ knp_pagination_render(pagination) }}
 	<a href="{{ path('app_plant_new') }}">Create new</a>
 {% endblock %}

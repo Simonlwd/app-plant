@@ -12,14 +12,27 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Knp\Component\Pager\PaginatorInterface;
+
 #[Route('/plant')]
 final class PlantController extends AbstractController
 {
     #[Route(name: 'app_plant_index', methods: ['GET'])]
-    public function index(PlantRepository $plantRepository): Response
-    {
+    public function index(
+        PlantRepository $plantRepository,
+        PaginatorInterface $paginator,
+        Request $request
+    ): Response {
+        $query = $plantRepository->createQueryBuilder('p')
+            ->orderBy('p.id', 'ASC');
+
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
+        );
         return $this->render('plant/index.html.twig', [
-            'plants' => $plantRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
 
