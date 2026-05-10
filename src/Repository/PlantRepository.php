@@ -16,6 +16,28 @@ class PlantRepository extends ServiceEntityRepository
         parent::__construct($registry, Plant::class);
     }
 
+    public function getPlantsQuery(string $search = '', string $sort = 'p.dutchName', string $direction = 'ASC')
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p');
+
+        if ($search) {
+            $qb->andWhere('p.dutchName LIKE :search OR p.latinName LIKE :search')
+                ->setParameter('search', "%{$search}%");
+        }
+
+        // whitelist van velden voorkomt foute injecties
+        $allowedFields = ['p.dutchName', 'p.latinName', 'p.createdAt'];
+        if (!in_array($sort, $allowedFields)) {
+            $sort = 'p.dutchName';
+        }
+        $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
+
+        $qb->orderBy($sort, $direction);
+
+        return $qb;
+    }
+
     //    /**
     //     * @return Plant[] Returns an array of Plant objects
     //     */

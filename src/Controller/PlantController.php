@@ -23,24 +23,13 @@ final class PlantController extends AbstractController
         PaginatorInterface $paginator,
         Request $request
     ): Response {
-
         // --- Query parameters
         $search = $request->query->get('q', '');
         $sort = $request->query->get('sort', 'p.dutchName'); // default field
         $direction = $request->query->get('direction', 'ASC'); // default direction
 
         // --- QueryBuilder
-        $qb = $plantRepository->createQueryBuilder('p')
-            ->select('p');
-
-        if ($search) {
-            $qb->andWhere('p.dutchName LIKE :search OR p.latinName LIKE :search')
-                ->setParameter('search', "%{$search}%");
-        }
-
-        // --- Sorting
-        // $direction = ($sort === 'p.createdAt') ? 'DESC' : 'ASC';
-        $qb->orderBy($sort, $direction);
+        $qb = $plantRepository->getPlantsQuery($search, $sort, $direction);
 
         // --- Pagination
         $pagination = $paginator->paginate(
@@ -49,7 +38,6 @@ final class PlantController extends AbstractController
             10,
             [
                 'sortFieldWhitelist' => ['p.dutchName', 'p.latinName', 'p.createdAt'],
-                'pageParameterName' => 'page',
                 'distinct' => true,
                 'wrap-queries' => true,
             ]
