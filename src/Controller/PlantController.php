@@ -28,19 +28,12 @@ final class PlantController extends AbstractController
         $sort = $request->query->get('sort', 'p.dutchName'); // default field
         $direction = $request->query->get('direction', 'ASC'); // default direction
 
-        // --- QueryBuilder
-        $qb = $plantRepository->getPlantsQuery($search, $sort, $direction);
-
-        // --- Pagination
-        $pagination = $paginator->paginate(
-            $qb,
+        $pagination = $plantRepository->findAllForPagination(
+            $paginator,
             $request->query->getInt('page', 1),
-            10,
-            [
-                'sortFieldWhitelist' => ['p.dutchName', 'p.latinName', 'p.createdAt'],
-                'distinct' => true,
-                'wrap-queries' => true,
-            ]
+            $sort,
+            $direction,
+            $search
         );
 
         return $this->render('plant/index.html.twig', [
