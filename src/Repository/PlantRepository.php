@@ -17,14 +17,26 @@ class PlantRepository extends ServiceEntityRepository
         parent::__construct($registry, Plant::class);
     }
 
-    public function findAllForPagination(PaginatorInterface $paginator, int $page = 1, string $sort = 'p.dutchName', string $direction = 'ASC', string $search = '')
-    {
+    public function findAllForPagination(
+        PaginatorInterface $paginator,
+        int $page = 1,
+        string $sort = 'p.dutchName',
+        string $direction = 'ASC',
+        string $search = '',
+        ?string $plantType = null
+    ) {
         $qb = $this->createQueryBuilder('p')
             ->select('p');
 
         if ($search) {
             $qb->andWhere('p.dutchName LIKE :search OR p.latinName LIKE :search')
                 ->setParameter('search', "%{$search}%");
+        }
+
+        // 🌱 plantType filter
+        if ($plantType) {
+            $qb->andWhere('p.plantType = :type')
+                ->setParameter('type', $plantType);
         }
 
         $qb->orderBy($sort, $direction);
