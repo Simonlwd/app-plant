@@ -100,5 +100,7 @@
 		</tbody>
 	</table>
 	{{ knp_pagination_render(pagination) }}
+	| aantal :
+	{{ pagination.getTotalItemCount }}
 	<a href="{{ path('app_plant_new') }}">Create new</a>
 {% endblock %}
