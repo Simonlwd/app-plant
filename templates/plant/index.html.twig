@@ -31,11 +31,12 @@
 			<input type="text" name="q" value="{{ search }}" placeholder="Search plants...">
 			<select name="type">
 				<option value="">All types</option>
-				<option value="boom" {{ app.request.query.get('type') == 'boom' ? 'selected' : '' }}>Boom</option>
-				<option value="struik" {{ app.request.query.get('type') == 'struik' ? 'selected' : '' }}>Struik</option>
-				<option value="vaste_plant" {{ app.request.query.get('type') == 'vaste plant' ? 'selected' : '' }}>Vaste plant</option>
-				<option value="siergras" {{ app.request.query.get('type') == 'siergras' ? 'selected' : '' }}>Siergras</option>
-				<option value="onkruid" {{ app.request.query.get('type') == 'onkruid' ? 'selected' : '' }}>Onkruid</option>
+
+				{% for value, label in constant('App\\Entity\\Plant::PLANT_TYPES') %}
+					<option value="{{ value }}" {{ app.request.query.get('type') == value ? 'selected' : '' }}>
+						{{ label }}
+					</option>
+				{% endfor %}
 			</select>
 			<button type="submit">Search</button>
 		</form>

@@ -35,6 +35,14 @@ class Plant
     #[ORM\Column]
     private ?\DateTime $updatedAt = null;
 
+    public const PLANT_TYPES = [
+        'boom' => 'Boom',
+        'struik' => 'Struik',
+        'vaste_plant' => 'Vaste plant',
+        'siergras' => 'Siergras',
+        'onkruid' => 'Onkruid',
+    ];
+
     public function getId(): ?int
     {
         return $this->id;

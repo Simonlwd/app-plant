@@ -17,15 +17,16 @@ class PlantType extends AbstractType
             ->add('latinName')
             ->add('description')
             ->add('plantType', ChoiceType::class, [
-                'choices' => [
-                    'Boom' => 'boom',
-                    'Boompje' => 'boompje',
-                    'Struik' => 'struik',
-                    'Vaste plant' => 'vaste plant',
-                    'Bloem' => 'bloem',
-                    'Gras' => 'gras',
-                    'Siergras' => 'siergras',
-                ],
+                'choices' => array_flip(Plant::PLANT_TYPES),
+                // 'choices' => [
+                //     'Boom' => 'boom',
+                //     'Boompje' => 'boompje',
+                //     'Struik' => 'struik',
+                //     'Vaste plant' => 'vaste plant',
+                //     'Bloem' => 'bloem',
+                //     'Gras' => 'gras',
+                //     'Siergras' => 'siergras',
+                // ],
             ])
         ;
     }
