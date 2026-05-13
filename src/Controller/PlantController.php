@@ -66,7 +66,11 @@ final class PlantController extends AbstractController
             $entityManager->persist($plant);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_plant_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute(
+                'app_plant_show_slug',
+                ['slug' => $plant->getSlug()],
+                Response::HTTP_SEE_OTHER
+            );
         }
 
         return $this->render('plant/new.html.twig', [
@@ -83,7 +87,7 @@ final class PlantController extends AbstractController
         ]);
     }
 
-    #[Route('/plant/{slug}', name: 'app_plant_show_slug', methods: ['GET'])]
+    #[Route('/{slug}', name: 'app_plant_show_slug', methods: ['GET'])]
     public function showBySlug(string $slug, PlantRepository $repo)
     {
         $plant = $repo->findOneBy(['slug' => $slug]);
@@ -120,7 +124,11 @@ final class PlantController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_plant_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute(
+                'app_plant_show_slug',
+                ['slug' => $plant->getSlug()],
+                Response::HTTP_SEE_OTHER
+            );
         }
 
         return $this->render('plant/edit.html.twig', [
