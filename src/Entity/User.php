@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -30,6 +32,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, Observation>
+     */
+    #[ORM\OneToMany(targetEntity: Observation::class, mappedBy: 'user')]
+    private Collection $observations;
+
+    public function __construct()
+    {
+        $this->observations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -101,8 +114,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
+    }
+
+    /**
+     * @return Collection<int, Observation>
+     */
+    public function getObservations(): Collection
+    {
+        return $this->observations;
+    }
+
+    public function addObservation(Observation $observation): static
+    {
+        if (!$this->observations->contains($observation)) {
+            $this->observations->add($observation);
+            $observation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeObservation(Observation $observation): static
+    {
+        if ($this->observations->removeElement($observation)) {
+            // set the owning side to null (unless already changed)
+            if ($observation->getUser() === $this) {
+                $observation->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
