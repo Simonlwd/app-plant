@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\PlantRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: PlantRepository::class)]
+#[UniqueEntity('latinName', message: 'Deze Latijnse naam bestaat al.')]
+#[UniqueEntity('slug', message: 'Deze slug bestaat al.')]
 class Plant
 {
     #[ORM\Id]
