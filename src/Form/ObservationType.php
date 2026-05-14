@@ -15,18 +15,12 @@ class ObservationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('observedAt', null, [
-                'widget' => 'single_text',
-            ])
             ->add('notes')
             ->add('locationName')
             ->add('imagePath', FileType::class, [
                 'label' => 'Foto',
                 'mapped' => false,
                 'required' => false,
-            ])
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
             ])
             ->add('suspectedName')
             // ->add('user', EntityType::class, [
