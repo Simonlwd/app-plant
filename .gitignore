@@ -1,4 +1,5 @@
 _notes/
+/public/uploads/
 ## env niet naar de repo
 .env
 .env.local
