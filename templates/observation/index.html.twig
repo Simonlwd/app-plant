@@ -8,7 +8,7 @@
 
 	<hr>
 
-	{% for observation in observations %}
+	{% for observation in pagination %}
 
 		<div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
 
@@ -27,6 +27,8 @@
 			<small>{{ observation.createdAt|date('d-m-Y H:i') }}</small>
 
 		</div>
+
+		{{ knp_pagination_render(pagination) }}
 
 	{% else %}
 		<p>Geen observaties gevonden.</p>
