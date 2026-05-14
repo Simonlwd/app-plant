@@ -10,28 +10,33 @@
 
 	{% for observation in pagination %}
 
-		<div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+		<div class="obs-card">
 
 			{% if observation.imagePath %}
-				<img src="{{ observation.imagePath }}" style="max-width:200px;">
+				<img src="{{ observation.imagePath }}" alt="Observation image" class="obs-image">
 			{% endif %}
 
-			<p>
-				<strong>Notes:</strong>
-				{{ observation.notes }}</p>
+			<div class="obs-content">
+				<p class="obs-notes">
+					{{ observation.notes|default('Geen notities') }}
+				</p>
 
-			<p>
-				<strong>Locatie:</strong>
-				{{ observation.locationName }}</p>
+				{% if observation.locationName %}
+					<p class="obs-location">📍
+						{{ observation.locationName }}</p>
+				{% endif %}
 
-			<small>{{ observation.createdAt|date('d-m-Y H:i') }}</small>
+				<small class="obs-date">
+					{{ observation.createdAt|date('d-m-Y H:i') }}
+				</small>
+			</div>
 
 		</div>
 
-		{{ knp_pagination_render(pagination) }}
 
 	{% else %}
 		<p>Geen observaties gevonden.</p>
 	{% endfor %}
+	{{ knp_pagination_render(pagination) }}
 
 {% endblock %}
