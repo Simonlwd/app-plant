@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Observation;
 use App\Form\ObservationType;
+use App\Repository\ObservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,11 +14,16 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/observation')]
 final class ObservationController extends AbstractController
 {
-    #[Route('/', name: 'app_observation')]
-    public function index(): Response
+    #[Route(name: 'app_observation_index', methods: ['GET'])]
+    public function index(ObservationRepository $repo): Response
     {
+
+        $observations = $repo->findBy(
+            [],
+            ['id' => 'DESC']
+        );
         return $this->render('observation/index.html.twig', [
-            'controller_name' => 'ObservationController',
+            'observations' => $observations,
         ]);
     }
 
