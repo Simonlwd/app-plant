@@ -29,6 +29,7 @@
 				<small class="obs-date">
 					{{ observation.createdAt|date('d-m-Y H:i') }}
 				</small>
+				<a href="{{ path('app_observation_edit', {id: observation.id}) }}">Bewerken</a>
 			</div>
 
 		</div>

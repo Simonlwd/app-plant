@@ -81,4 +81,25 @@ final class ObservationController extends AbstractController
             'form' => $form
         ]);
     }
+
+    #[Route('/{id}/edit', name: 'app_observation_edit', methods: ['GET', 'POST'])]
+    public function edit(
+        Request $request,
+        Observation $observation,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $form = $this->createForm(ObservationType::class, $observation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_observation_index');
+        }
+
+        return $this->render('observation/edit.html.twig', [
+            'observation' => $observation,
+            'form' => $form,
+        ]);
+    }
 }
