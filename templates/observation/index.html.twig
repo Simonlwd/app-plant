@@ -30,6 +30,10 @@
 					{{ observation.createdAt|date('d-m-Y H:i') }}
 				</small>
 				<a href="{{ path('app_observation_edit', {id: observation.id}) }}">Bewerken</a>
+				<form method="post" action="{{ path('app_observation_delete', {id: observation.id}) }}" onsubmit="return confirm('Weet je zeker dat je deze observatie wilt verwijderen?');">
+				    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ observation.id) }}">
+				    <button class="btn btn-danger">Verwijderen</button>
+				</form>
 			</div>
 
 		</div>

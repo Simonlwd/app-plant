@@ -102,4 +102,35 @@ final class ObservationController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    #[Route('/{id}/delete', name: 'app_observation_delete', methods: ['POST'])]
+    public function delete(
+        Request $request,
+        Observation $observation,
+        EntityManagerInterface $entityManager
+    ): Response {
+        // Permissions check: alleen eigenaar of admin
+        if ($observation->getUser() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // CSRF check
+        if ($this->isCsrfTokenValid('delete' . $observation->getId(), $request->request->get('_token'))) {
+            // Verwijder de afbeelding
+            if ($observation->getImagePath()) {
+                $filePath = $this->getParameter('kernel.project_dir') . '/public' . $observation->getImagePath();
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+
+            // Verwijder de entity
+            $entityManager->remove($observation);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Observatie verwijderd.');
+        }
+
+        return $this->redirectToRoute('app_observation_index');
+    }
 }
