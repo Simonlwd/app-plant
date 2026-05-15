@@ -30,6 +30,11 @@ final class ObservationController extends AbstractController
         $queryBuilder = $repo->createQueryBuilder('o')
             ->orderBy('o.createdAt', 'DESC');
 
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $queryBuilder
+                ->andWhere('o.user = :user')
+                ->setParameter('user', $this->getUser());
+        }
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
