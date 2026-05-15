@@ -21,4 +21,20 @@ class FileUploader
 
         return $newFilename;
     }
+
+    /**
+     * Verwijder een bestand als het bestaat
+     */
+    public function deleteFile(?string $filePath): bool
+    {
+        if (!$filePath) {
+            return false;
+        }
+
+        if (file_exists($filePath)) {
+            return unlink($filePath);
+        }
+
+        return false;
+    }
 }

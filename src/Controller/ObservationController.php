@@ -107,7 +107,8 @@ final class ObservationController extends AbstractController
     public function delete(
         Request $request,
         Observation $observation,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        FileUploader $fileUploader
     ): Response {
         // Permissions check: alleen eigenaar of admin
         if ($observation->getUser() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
@@ -116,12 +117,10 @@ final class ObservationController extends AbstractController
 
         // CSRF check
         if ($this->isCsrfTokenValid('delete' . $observation->getId(), $request->request->get('_token'))) {
-            // Verwijder de afbeelding
+            // Verwijder bestand via service
             if ($observation->getImagePath()) {
                 $filePath = $this->getParameter('kernel.project_dir') . '/public' . $observation->getImagePath();
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                }
+                $fileUploader->deleteFile($filePath);
             }
 
             // Verwijder de entity
