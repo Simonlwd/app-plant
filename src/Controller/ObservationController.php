@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Observation;
 use App\Form\ObservationType;
+use App\Service\FileUploader;
 use App\Repository\ObservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -15,6 +16,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/observation')]
 final class ObservationController extends AbstractController
 {
+    public function __construct(
+        private FileUploader $fileUploader
+    ) {}
+
     #[Route(name: 'app_observation_index', methods: ['GET'])]
     public function index(
         ObservationRepository $repo,
@@ -52,12 +57,11 @@ final class ObservationController extends AbstractController
             }
 
             $imageFile = $form->get('imagePath')->getData();
-            if ($imageFile) {
-                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
 
-                $imageFile->move(
-                    $this->getParameter('kernel.project_dir') . '/public/uploads/observations',
-                    $newFilename
+            if ($imageFile) {
+                $newFilename = $this->fileUploader->upload(
+                    $imageFile,
+                    $this->getParameter('uploads_observations_dir')
                 );
 
                 $observation->setImagePath('/uploads/observations/' . $newFilename);
