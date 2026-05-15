@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ObservationType extends AbstractType
@@ -38,6 +39,17 @@ class ObservationType extends AbstractType
                 'label' => 'Foto',
                 'mapped' => false,
                 'required' => false,
+                'constraints' => [
+                    new File(
+                        maxSize: '5M',
+                        mimeTypes: [
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
+                        ],
+                        mimeTypesMessage: 'Upload een geldige afbeelding (JPEG, PNG of WebP).',
+                    ),
+                ],
             ])
             ->add('suspectedName')
             // ->add('user', EntityType::class, [
