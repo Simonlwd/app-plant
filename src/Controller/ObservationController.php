@@ -88,6 +88,11 @@ final class ObservationController extends AbstractController
         Observation $observation,
         EntityManagerInterface $entityManager
     ): Response {
+        // Permissions: alleen eigenaar of admin
+        if ($observation->getUser() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException();
+        }
+        
         $form = $this->createForm(ObservationType::class, $observation);
         $form->handleRequest($request);
 
