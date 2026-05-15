@@ -75,6 +75,7 @@ final class ObservationController extends AbstractController
             $em->persist($observation);
             $em->flush();
 
+            $this->addFlash('success', 'Observatie succesvol toegevoegd.');
             return $this->redirectToRoute('app_observation_new');
         }
         return $this->render('observation/new.html.twig', [
@@ -92,13 +93,30 @@ final class ObservationController extends AbstractController
         if ($observation->getUser() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
-        
+
         $form = $this->createForm(ObservationType::class, $observation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Image upload
+            $imageFile = $form->get('imagePath')->getData();
+            if ($imageFile) {
+                // Oude afbeelding verwijderen als die er is
+                if ($observation->getImagePath()) {
+                    $oldFilePath = $this->getParameter('kernel.project_dir') . '/public' . $observation->getImagePath();
+                    $this->fileUploader->deleteFile($oldFilePath);
+                }
+
+                $newFilename = $this->fileUploader->upload(
+                    $imageFile,
+                    $this->getParameter('uploads_observations_dir')
+                );
+                $observation->setImagePath('/uploads/observations/' . $newFilename);
+            }
+
             $entityManager->flush();
 
+            $this->addFlash('success', 'Observatie bijgewerkt.');
             return $this->redirectToRoute('app_observation_index');
         }
 
