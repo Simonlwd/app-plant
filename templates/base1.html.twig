@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}App Plant{% endblock %}</title>
+
+    {# Bulma CSS via CDN #}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    {# Eigen app CSS #}
+    {% block javascripts %}
+			{% block importmap %}
+				{{ importmap('app') }}
+			{% endblock %}
+		{% endblock %}
+</head>
+<body>
+
+    {# Navbar #}
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{{ path('app_home') }}">App Plant</a>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="navbarMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="{{ path('app_observation_index') }}">Observaties</a>
+                <a class="navbar-item" href="{{ path('app_plant_index') }}">Planten</a>
+            </div>
+        </div>
+    </nav>
+
+    {# Flash messages #}
+    <section class="section">
+        <div class="container">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="notification is-{{ label|default('info') }}">
+                        {{ message }}
+                        <button class="delete"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </section>
+
+    {# Sidebar + Content layout #}
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                
+                {# Sidebar #}
+                <aside class="column is-full-mobile is-3-desktop">
+                    {% block sidebar %}
+                    <aside class="menu">
+                        <p class="menu-label">Navigatie</p>
+                        <ul class="menu-list">
+                            <li><a class="is-block py-2 px-3 tap-link" href="{{ path('app_observation_index') }}">Observaties</a></li>
+                            <li><a class="is-block py-2 px-3 tap-link" href="{{ path('app_plant_index') }}">Planten</a></li>
+                        </ul>
+                    </aside>
+                    {% endblock %}
+                </aside>
+
+                {# Main content #}
+                <main class="column is-full-mobile is-9-desktop">
+                    {% block body %}
+                    {# Voorbeeld content: 2 plant-kaarten #}
+                    <div class="columns is-multiline">
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <div class="card plant-kaart">
+                                <div class="card-content">
+                                    <p class="title">Acer palmatum</p>
+                                    <p class="subtitle">Hoogte: 3-5 meter</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <div class="card plant-kaart">
+                                <div class="card-content">
+                                    <p class="title">Rosa rubiginosa</p>
+                                    <p class="subtitle">Bloeiperiode: mei-juni</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endblock %}
+                </main>
+
+            </div>
+        </div>
+    </section>
+
+    {# Footer #}
+    <footer class="footer">
+        <div class="content has-text-centered">
+            {% block footer %}
+            <p>&copy; 2026 App Plant</p>
+            {% endblock %}
+        </div>
+    </footer>
+</body>
+</html>
