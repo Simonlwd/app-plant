@@ -116,7 +116,7 @@ final class ObservationController extends AbstractController
 
             $entityManager->flush();
 
-            $this->addFlash('success', 'Observatie bijgewerkt.');
+            $this->addFlash('info', 'Observatie bijgewerkt.');
             return $this->redirectToRoute('app_observation_index');
         }
 
@@ -150,7 +150,7 @@ final class ObservationController extends AbstractController
             $entityManager->remove($observation);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Observatie verwijderd.');
+            $this->addFlash('danger', 'Observatie verwijderd.');
         }
 
         return $this->redirectToRoute('app_observation_index');
