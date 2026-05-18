@@ -72,9 +72,19 @@
             <div class="container">
                 <div class="columns is-multiline">
                     {# Sidebar #}
-                    <aside class="column is-full-mobile is-3-desktop">
+                    <aside class="column is-full-mobile is-3-desktop"  data-controller="sidebar">
                         {% block sidebar %}
-                            <aside class="menu">
+
+							<div class="box is-hidden-desktop" style="margin-bottom: 1rem;">
+								<button class="button is-primary is-fullwidth" data-sidebar-target="burger">
+									<span>Navigatie</span>
+									<span class="icon">
+										<i class="fas fa-bars"></i>
+									</span>
+								</button>
+							</div>
+
+                            <aside class="menu" data-sidebar-target="menu">
                                 <p class="menu-label">Navigatie</p>
                                 <ul class="menu-list">
                                     <li><a class="is-block py-2 px-3 tap-link" href="{{ path('app_observation_index') }}">Observaties</a></li>
