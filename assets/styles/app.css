@@ -66,6 +66,38 @@ footer.footer {
 
 /* Mobile tweaks */
 @media (max-width: 768px) {
+     .menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        height: 100vh;
+        background: white;
+        z-index: 40;
+        padding: 1.5rem 1rem;
+        box-shadow: 4px 0 12px rgba(0, 0, 0, 0.12);
+
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+    }
+
+    .menu.is-open {
+        transform: translateX(0);
+    }
+
+    /* donkere achtergrond achter menu */
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 30;
+        display: none;
+    }
+
+    .sidebar-overlay.is-active {
+        display: block;
+    }
     main.column {
         padding-left: 0;
         padding-right: 0;

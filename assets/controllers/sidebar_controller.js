@@ -1,17 +1,25 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["menu", "burger"]
+    static targets = ["burger", "menu", "overlay"]
 
     connect() {
-        if (!this.hasMenuTarget || !this.hasBurgerTarget) return
-
-        // Start met sidebar verborgen op mobiel
-        this.menuTarget.classList.add('is-hidden-mobile')
-
-        // Burger klik togglet zichtbaarheid
-        this.burgerTarget.addEventListener('click', () => {
-            this.menuTarget.classList.toggle('is-hidden-mobile')
+        this.burgerTarget.addEventListener("click", () => {
+            this.toggle()
         })
+
+        this.overlayTarget.addEventListener("click", () => {
+            this.close()
+        })
+    }
+
+    toggle() {
+        this.menuTarget.classList.toggle("is-open")
+        this.overlayTarget.classList.toggle("is-active")
+    }
+
+    close() {
+        this.menuTarget.classList.remove("is-open")
+        this.overlayTarget.classList.remove("is-active")
     }
 }
