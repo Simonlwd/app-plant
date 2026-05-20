@@ -29,7 +29,6 @@
         {% endif %}
     </head>
     <body>
-
         <header>
             {% block navbar %}
                 <nav class="navbar is-primary" role="navigation" aria-label="main navigation" data-controller="navbar">
@@ -68,11 +67,11 @@
         </section>
 
         {# Main layout: Sidebar + Content #}
+        {# <div class="container column"> #}
         <section class="section">
             <div class="container">
-                <div class="columns is-mobile is-centered">
-                    {# Main content #}
-                    <main class="column is-half has-text-centered">
+                <div class="columns is-centered">
+                    <main class="column is-half">
                         {% block body %}
                         {% endblock %}
                     </main>
@@ -80,14 +79,14 @@
             </div>
         </section>
 
-        {# Footer #}
-        <footer class="footer">
+        <footer class="column">
             <div class="content has-text-centered">
                 {% block footer %}
                     <p>&copy; 2026 App Plant</p>
                 {% endblock %}
             </div>
         </footer>
+
     </body>
 </html>
-</body></html>
+
