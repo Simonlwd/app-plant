@@ -35,10 +35,19 @@ final class ObservationController extends AbstractController
                 ->andWhere('o.user = :user')
                 ->setParameter('user', $this->getUser());
         }
+
+        $search = $request->query->get('search');
+
+        if ($search) {
+            $queryBuilder
+                ->andWhere('o.notes LIKE :search OR o.locationName LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            1
+            10
         );
         return $this->render('observation/index.html.twig', [
             'pagination' => $pagination,

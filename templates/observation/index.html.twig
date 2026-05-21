@@ -2,46 +2,57 @@
 
 {% block body %}
 
-	<h1>Observaties</h1>
+    <h1>Observaties</h1>
 
-	<a href="{{ path('app_observation_new') }}">+ Nieuwe observatie</a>
+    <a href="{{ path('app_observation_new') }}">+ Nieuwe observatie</a>
 
+    <hr>
+    <form method="get">
+        <input
+        type="text"
+        name="search"
+        value="{{ app.request.query.get('search') }}"
+        placeholder="Zoek observaties..."
+        >
+
+        <button type="submit">Zoeken</button>
+    </form>
 	<hr>
 
-	{% for observation in pagination %}
+    {% for observation in pagination %}
 
-		<div class="obs-card">
+        <div class="obs-card">
 
-			{% if observation.imagePath %}
-				<img src="{{ observation.imagePath }}" alt="Observation image" class="obs-image">
-			{% endif %}
+            {% if observation.imagePath %}
+                <img src="{{ observation.imagePath }}" alt="Observation image" class="obs-image">
+            {% endif %}
 
-			<div class="obs-content">
-				<p class="obs-notes">
-					{{ observation.notes|default('Geen notities') }}
-				</p>
+            <div class="obs-content">
+                <p class="obs-notes">
+                    {{ observation.notes|default('Geen notities') }}
+                </p>
 
-				{% if observation.locationName %}
-					<p class="obs-location">📍
-						{{ observation.locationName }}</p>
-				{% endif %}
+                {% if observation.locationName %}
+                    <p class="obs-location">📍
+                    {{ observation.locationName }}</p>
+                {% endif %}
 
-				<small class="obs-date">
-					{{ observation.createdAt|date('d-m-Y H:i') }}
-				</small>
-				<a href="{{ path('app_observation_edit', {id: observation.id}) }}">Bewerken</a>
-				<form method="post" action="{{ path('app_observation_delete', {id: observation.id}) }}" onsubmit="return confirm('Weet je zeker dat je deze observatie wilt verwijderen?');">
-				    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ observation.id) }}">
-				    <button class="btn btn-danger">Verwijderen</button>
-				</form>
-			</div>
+                <small class="obs-date">
+                    {{ observation.createdAt|date('d-m-Y H:i') }}
+                </small>
+                <a href="{{ path('app_observation_edit', {id: observation.id}) }}">Bewerken</a>
+                <form method="post" action="{{ path('app_observation_delete', {id: observation.id}) }}" onsubmit="return confirm('Weet je zeker dat je deze observatie wilt verwijderen?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ observation.id) }}">
+                    <button class="btn btn-danger">Verwijderen</button>
+                </form>
+            </div>
 
-		</div>
+        </div>
 
 
-	{% else %}
-		<p>Geen observaties gevonden.</p>
-	{% endfor %}
-	{{ knp_pagination_render(pagination) }}
+    {% else %}
+        <p>Geen observaties gevonden.</p>
+    {% endfor %}
+    {{ knp_pagination_render(pagination) }}
 
 {% endblock %}
