@@ -25,52 +25,67 @@
             {% endif %}
             >
             Alleen met afbeelding
-        </label>
+            </label><br>
 
-        <button type="submit">Zoeken</button>
-    </form>
-	
-    {% if hasFilters %}
-        <a href="{{ path('app_observation_index') }}">
-            Reset filters
-        </a>
-    {% endif %}
-    <hr>
+            <input
+            type="date"
+            name="fromDate"
+            value="{{ app.request.query.get('fromDate') }}"
+            max="{{ "now"|date('Y-m-d') }}"
+            >
+            tot
+            <input
+            type="date"
+            name="toDate"
+            value="{{ app.request.query.get('toDate')}}"
+            max="{{ "now"|date('Y-m-d') }}"
+			>
 
-    {% for observation in pagination %}
+            <button type="submit">Zoeken</button>
+        </form>
 
-        <div class="card">
 
-            {% if observation.imagePath %}
-                <img src="{{ observation.imagePath }}" alt="Observation image" class="obs-image">
-            {% endif %}
+        {% if hasFilters %}
+            <a href="{{ path('app_observation_index') }}">
+                Reset filters
+            </a>
+        {% endif %}
+        <hr>
 
-            <div class="obs-content">
-                <p class="obs-notes">
-                    {{ observation.notes|default('Geen notities') }}
-                </p>
+        {% for observation in pagination %}
 
-                {% if observation.locationName %}
-                    <p class="obs-location">📍
-                    {{ observation.locationName }}</p>
+            <div class="card">
+
+                {% if observation.imagePath %}
+                    <img src="{{ observation.imagePath }}" alt="Observation image" class="obs-image">
                 {% endif %}
 
-                <small class="obs-date">
-                    {{ observation.createdAt|date('d-m-Y H:i') }}
-                </small>
-                <a href="{{ path('app_observation_edit', {id: observation.id}) }}">Bewerken</a>
-                <form method="post" action="{{ path('app_observation_delete', {id: observation.id}) }}" onsubmit="return confirm('Weet je zeker dat je deze observatie wilt verwijderen?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ observation.id) }}">
-                    <button class="btn btn-danger">Verwijderen</button>
-                </form>
+                <div class="obs-content">
+                    <p class="obs-notes">
+                        {{ observation.notes|default('Geen notities') }}
+                    </p>
+
+                    {% if observation.locationName %}
+                        <p class="obs-location">📍
+                        {{ observation.locationName }}</p>
+                    {% endif %}
+
+                    <small class="obs-date">
+                        {{ observation.createdAt|date('d-m-Y H:i') }}
+                    </small>
+                    <a href="{{ path('app_observation_edit', {id: observation.id}) }}">Bewerken</a>
+                    <form method="post" action="{{ path('app_observation_delete', {id: observation.id}) }}" onsubmit="return confirm('Weet je zeker dat je deze observatie wilt verwijderen?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ observation.id) }}">
+                        <button class="btn btn-danger">Verwijderen</button>
+                    </form>
+                </div>
+
             </div>
 
-        </div>
 
+        {% else %}
+            <p>Geen observaties gevonden.</p>
+        {% endfor %}
+        {{ knp_pagination_render(pagination) }}
 
-    {% else %}
-        <p>Geen observaties gevonden.</p>
-    {% endfor %}
-    {{ knp_pagination_render(pagination) }}
-
-{% endblock %}
+    {% endblock %}

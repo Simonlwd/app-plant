@@ -51,6 +51,21 @@ final class ObservationController extends AbstractController
                 ->andWhere('o.imagePath IS NOT NULL');
         }
 
+        $fromDate = $request->query->get('fromDate');
+        $toData = $request->query->get('toDate');
+
+        if ($fromDate && new \DateTime($fromDate) <= new \DateTime()) {
+            $queryBuilder
+                ->andWhere('o.observedAt >= :fromDate')
+                ->setParameter('fromDate', new \DateTime($fromDate));
+        }
+
+        if ($toData && new \DateTime($toData) <= new \DateTime()) {
+            $queryBuilder
+                ->andWhere('o.observedAt <= :toDate')
+                ->setParameter('toDate', new \DateTime($toData));
+        }
+
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
