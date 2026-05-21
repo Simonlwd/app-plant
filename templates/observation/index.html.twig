@@ -15,7 +15,7 @@
         placeholder="Zoek observaties..."
         >
 
-        <label>
+        
             <input
             type="checkbox"
             name="hasImage"
@@ -24,8 +24,7 @@
                 checked
             {% endif %}
             >
-            Alleen met afbeelding
-            </label><br>
+            Alleen met afbeelding<br>
 
             <input
             type="date"
@@ -39,14 +38,33 @@
             name="toDate"
             value="{{ app.request.query.get('toDate')}}"
             max="{{ "now"|date('Y-m-d') }}"
-			>
+            >
 
             <button type="submit">Zoeken</button>
         </form>
 
+        {% if activeFilters is not empty %}
+
+            <div class="mb-4">
+
+                <strong>Actieve filters:</strong>
+
+                <div class="tags mt-2">
+
+                    {% for filter in activeFilters %}
+                        <span class="tag is-info is-medium">
+                            {{ filter }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        {% endif %}
 
         {% if hasFilters %}
-            <a href="{{ path('app_observation_index') }}">
+            <a href="{{ path('app_observation_index') }}" class="button is-light is-small">
                 Reset filters
             </a>
         {% endif %}
@@ -84,7 +102,15 @@
 
 
         {% else %}
-            <p>Geen observaties gevonden.</p>
+            {% if hasFilters %}
+                <div class="notification is-warning is-light">
+                    <p>Geen observaties gevonden met huidige filters.</p>
+                </div>
+            {% else %}
+                <div class="notification is-info is-light">
+                    <p>Geen observaties gevonden.</p>
+                </div>
+            {% endif %}
         {% endfor %}
         {{ knp_pagination_render(pagination) }}
 

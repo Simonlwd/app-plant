@@ -26,6 +26,7 @@ final class ObservationController extends AbstractController
         PaginatorInterface $paginator,
         Request $request
     ): Response {
+        $activeFilters = [];
 
         $queryBuilder = $repo->createQueryBuilder('o')
             ->orderBy('o.createdAt', 'DESC');
@@ -42,6 +43,8 @@ final class ObservationController extends AbstractController
             $queryBuilder
                 ->andWhere('o.notes LIKE :search OR o.locationName LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
+
+            $activeFilters[] = 'Zoekterm: ' . $search;
         }
 
         $hasImage = $request->query->get('hasImage');
@@ -49,21 +52,27 @@ final class ObservationController extends AbstractController
         if ($hasImage) {
             $queryBuilder
                 ->andWhere('o.imagePath IS NOT NULL');
+
+            $activeFilters[] = 'Alleen met afbeelding';
         }
 
         $fromDate = $request->query->get('fromDate');
-        $toData = $request->query->get('toDate');
+        $toDate = $request->query->get('toDate');
 
         if ($fromDate && new \DateTime($fromDate) <= new \DateTime()) {
             $queryBuilder
                 ->andWhere('o.observedAt >= :fromDate')
                 ->setParameter('fromDate', new \DateTime($fromDate));
+
+            $activeFilters[] = 'Vanaf: ' . (new \DateTime($fromDate))->format('d-m-Y');
         }
 
-        if ($toData && new \DateTime($toData) <= new \DateTime()) {
+        if ($toDate && new \DateTime($toDate) <= new \DateTime()) {
             $queryBuilder
                 ->andWhere('o.observedAt <= :toDate')
-                ->setParameter('toDate', new \DateTime($toData));
+                ->setParameter('toDate', new \DateTime($toDate));
+
+            $activeFilters[] = 'Tot: ' . (new \DateTime($toDate))->format('d-m-Y');
         }
 
         $pagination = $paginator->paginate(
@@ -80,6 +89,7 @@ final class ObservationController extends AbstractController
         return $this->render('observation/index.html.twig', [
             'pagination' => $pagination,
             'hasFilters' => $hasFilters,
+            'activeFilters' => $activeFilters,
         ]);
     }
 
