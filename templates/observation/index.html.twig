@@ -29,6 +29,12 @@
 
         <button type="submit">Zoeken</button>
     </form>
+	
+    {% if hasFilters %}
+        <a href="{{ path('app_observation_index') }}">
+            Reset filters
+        </a>
+    {% endif %}
     <hr>
 
     {% for observation in pagination %}

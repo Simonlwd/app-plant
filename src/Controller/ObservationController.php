@@ -56,8 +56,15 @@ final class ObservationController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
+
+        // get all parameters en remove, page
+        $queryParams = $request->query->all();
+        unset($queryParams['page']);
+        $hasFilters = count($queryParams) > 0;
+
         return $this->render('observation/index.html.twig', [
             'pagination' => $pagination,
+            'hasFilters' => $hasFilters,
         ]);
     }
 
