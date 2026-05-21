@@ -44,6 +44,13 @@ final class ObservationController extends AbstractController
                 ->setParameter('search', '%' . $search . '%');
         }
 
+        $hasImage = $request->query->get('hasImage');
+
+        if ($hasImage) {
+            $queryBuilder
+                ->andWhere('o.imagePath IS NOT NULL');
+        }
+
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),

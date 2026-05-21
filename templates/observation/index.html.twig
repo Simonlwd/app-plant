@@ -15,13 +15,25 @@
         placeholder="Zoek observaties..."
         >
 
+        <label>
+            <input
+            type="checkbox"
+            name="hasImage"
+            value="1"
+            {% if app.request.query.get('hasImage') %}
+                checked
+            {% endif %}
+            >
+            Alleen met afbeelding
+        </label>
+
         <button type="submit">Zoeken</button>
     </form>
-	<hr>
+    <hr>
 
     {% for observation in pagination %}
 
-        <div class="obs-card">
+        <div class="card">
 
             {% if observation.imagePath %}
                 <img src="{{ observation.imagePath }}" alt="Observation image" class="obs-image">
