@@ -15,103 +15,114 @@
         placeholder="Zoek observaties..."
         >
 
-        
-            <input
-            type="checkbox"
-            name="hasImage"
-            value="1"
-            {% if app.request.query.get('hasImage') %}
-                checked
-            {% endif %}
-            >
-            Alleen met afbeelding<br>
 
-            <input
-            type="date"
-            name="fromDate"
-            value="{{ app.request.query.get('fromDate') }}"
-            max="{{ "now"|date('Y-m-d') }}"
-            >
-            tot
-            <input
-            type="date"
-            name="toDate"
-            value="{{ app.request.query.get('toDate')}}"
-            max="{{ "now"|date('Y-m-d') }}"
-            >
+        <input
+        type="checkbox"
+        name="hasImage"
+        value="1"
+        {% if app.request.query.get('hasImage') %}
+            checked
+        {% endif %}
+        >
+        Alleen met afbeelding<br>
 
-            <button type="submit">Zoeken</button>
-        </form>
+        <input
+        type="date"
+        name="fromDate"
+        value="{{ app.request.query.get('fromDate') }}"
+        max="{{ "now"|date('Y-m-d') }}"
+        >
+        tot
+        <input
+        type="date"
+        name="toDate"
+        value="{{ app.request.query.get('toDate')}}"
+        max="{{ "now"|date('Y-m-d') }}"
+        >
 
-        {% if activeFilters is not empty %}
+        <button type="submit">Zoeken</button>
+    </form>
 
-            <div class="mb-4">
+    {% if activeFilters is not empty %}
 
-                <strong>Actieve filters:</strong>
+        <div class="mb-4">
 
-                <div class="tags mt-2">
+            <strong>Actieve filters:</strong>
 
-                    {% for filter in activeFilters %}
-                        <span class="tag is-info is-medium">
-                            {{ filter }}
-                        </span>
-                    {% endfor %}
+            <div class="tags mt-2">
 
-                </div>
+                {% for filter in activeFilters %}
+                    <span class="tag is-info is-medium">
+                        {{ filter }}
+                    </span>
+                {% endfor %}
 
             </div>
 
-        {% endif %}
+        </div>
 
-        {% if hasFilters %}
-            <a href="{{ path('app_observation_index') }}" class="button is-light is-small">
-                Reset filters
-            </a>
-        {% endif %}
-        <hr>
+    {% endif %}
 
-        {% for observation in pagination %}
+    {% if hasFilters %}
+        <a href="{{ path('app_observation_index') }}" class="button is-light is-small">
+            Reset filters
+        </a>
+    {% endif %}
+    <hr>
 
-            <div class="card">
+    {% for observation in pagination %}
 
-                {% if observation.imagePath %}
-                    <img src="{{ observation.imagePath }}" alt="Observation image" class="obs-image">
+        <div class="card">
+
+            {% if observation.imagePath %}
+                <div class="card-image">
+                    <figure class="image is-4by3">
+                        <img src="{{ observation.imagePath }}" alt="Observation image" class="">
+                    </figure>
+                </div>
+            {% endif %}
+
+            <div class="card-content">
+                <p class="">
+                    {{ observation.notes|default('Geen notities') }}
+                </p>
+
+                {% if observation.locationName %}
+                    <p class="obs-location">📍
+                    {{ observation.locationName }}</p>
                 {% endif %}
 
-                <div class="obs-content">
-                    <p class="obs-notes">
-                        {{ observation.notes|default('Geen notities') }}
-                    </p>
-
-                    {% if observation.locationName %}
-                        <p class="obs-location">📍
-                        {{ observation.locationName }}</p>
-                    {% endif %}
-
-                    <small class="obs-date">
-                        {{ observation.createdAt|date('d-m-Y H:i') }}
-                    </small>
-                    <a href="{{ path('app_observation_edit', {id: observation.id}) }}">Bewerken</a>
-                    <form method="post" action="{{ path('app_observation_delete', {id: observation.id}) }}" onsubmit="return confirm('Weet je zeker dat je deze observatie wilt verwijderen?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ observation.id) }}">
-                        <button class="btn btn-danger">Verwijderen</button>
-                    </form>
-                </div>
-
+                <small class="">
+                    {{ observation.createdAt|date('d-m-Y H:i') }}
+                </small>
             </div>
 
 
-        {% else %}
-            {% if hasFilters %}
-                <div class="notification is-warning is-light">
-                    <p>Geen observaties gevonden met huidige filters.</p>
-                </div>
-            {% else %}
-                <div class="notification is-info is-light">
-                    <p>Geen observaties gevonden.</p>
-                </div>
-            {% endif %}
-        {% endfor %}
-        {{ knp_pagination_render(pagination) }}
+            <footer class="card-footer p-0">
+                <a href="{{ path('app_observation_show', {id: observation.id}) }}" class="card-footer-item">Bekijken</a>
+                <a href="{{ path('app_observation_edit', {id: observation.id}) }}" class="card-footer-item">Bewerken</a>
+                <form method="post" action="{{ path('app_observation_delete', {id: observation.id}) }}" onsubmit="return confirm('Weet je zeker dat je deze observatie wilt verwijderen?');" class="card-footer-item p-0 is-flex is-align-items-stretch">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ observation.id) }}">
+                    <button class="button is-danger is-light is-fullwidth is-radiusless">Verwijderen</button>
+                </form>
+            </footer>
 
-    {% endblock %}
+        </div>
+
+
+
+
+    {% else %}
+        {% if hasFilters %}
+            <div class="notification is-warning is-light">
+                <p>Geen observaties gevonden met huidige filters.</p>
+            </div>
+        {% else %}
+            <div class="notification is-info is-light">
+                <p>Geen observaties gevonden.</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+    {{ knp_pagination_render(pagination) }}
+
+{% endblock %}

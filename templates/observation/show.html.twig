@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Observatie bekijken
+{% endblock %}
+
+{% block body %}
+
+    <h1 class="title">Observatie</h1>
+
+    <div class="card">
+
+        {% if observation.imagePath %}
+        <div class="card-image">
+                    <figure class="image is-4by3">
+                <img
+                    src="{{ observation.imagePath }}"
+                    alt="Observation image"
+                    
+                >
+            </figure>
+        {% endif %}
+
+        <div class="card-content">
+
+            <p>
+                <strong>Notities:</strong><br>
+                {{ observation.notes|default('Geen notities') }}
+            </p>
+
+            {% if observation.locationName %}
+                <p>
+                    <strong>Locatie:</strong><br>
+                    📍 {{ observation.locationName }}
+                </p>
+            {% endif %}
+
+            <p>
+                <strong>Geobserveerd op:</strong><br>
+                {{ observation.observedAt|date('d-m-Y H:i') }}
+            </p>
+
+            <p>
+                <strong>Aangemaakt op:</strong><br>
+                {{ observation.createdAt|date('d-m-Y H:i') }}
+            </p>
+
+        </div>
+
+        <footer class="card-footer p-0">
+
+            <a
+                href="{{ path('app_observation_edit', {id: observation.id}) }}"
+                class="card-footer-item"
+            >
+                Bewerken
+            </a>
+
+            <a
+                href="{{ path('app_observation_index') }}"
+                class="card-footer-item"
+            >
+                Terug
+            </a>
+            <form method="post" action="{{ path('app_observation_delete', {id: observation.id}) }}" onsubmit="return confirm('Weet je zeker dat je deze observatie wilt verwijderen?');" class="card-footer-item p-0 is-flex is-align-items-stretch">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ observation.id) }}">
+                <button class="button is-danger is-light is-fullwidth is-radiusless">Verwijderen</button>
+            </form>
+
+        </footer>
+
+    </div>
+
+{% endblock %}

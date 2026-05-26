@@ -131,6 +131,22 @@ final class ObservationController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}', name: 'app_observation_show', methods: ['GET'])]
+public function show(Observation $observation): Response
+{
+    // Permissions
+    if (
+        $observation->getUser() !== $this->getUser()
+        && !$this->isGranted('ROLE_ADMIN')
+    ) {
+        throw $this->createAccessDeniedException();
+    }
+
+    return $this->render('observation/show.html.twig', [
+        'observation' => $observation,
+    ]);
+}
+
     #[Route('/{id}/edit', name: 'app_observation_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
